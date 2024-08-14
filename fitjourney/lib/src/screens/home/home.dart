@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'exercises.dart';
-import 'meal_stracking.dart';
-import 'workoutplans.dart';
+import '../exercises/exercises.dart';
+import '../meals/meal_tracking_home.dart';
+import '../workoutplans/workoutplans.dart';
 
 class HomeScreen extends StatefulWidget {
   @override

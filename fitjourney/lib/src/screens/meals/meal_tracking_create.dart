@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:hive/hive.dart';
+import '../../models/meal.dart';
 
 class MealRegistrationScreen extends StatefulWidget {
-  final Function(Map<String, dynamic>)? onMealAdded;
+  final Function(Meal)? onMealAdded;
 
   MealRegistrationScreen({this.onMealAdded});
 
@@ -19,6 +23,17 @@ class _MealRegistrationScreenState extends State<MealRegistrationScreen> {
   double _fats = 0;
   DateTime _dateTime = DateTime.now();
   bool _isInDiet = true;
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,20 +154,43 @@ class _MealRegistrationScreenState extends State<MealRegistrationScreen> {
                 },
               ),
               SizedBox(height: 16),
+              _image == null
+                  ? ElevatedButton.icon(
+                      onPressed: _pickImage,
+                      icon: Icon(Icons.photo),
+                      label: Text('Adicionar Imagem da Refeição'),
+                    )
+                  : Column(
+                      children: [
+                        Image.file(
+                          _image!,
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: _pickImage,
+                          icon: Icon(Icons.photo),
+                          label: Text('Alterar Imagem'),
+                        ),
+                      ],
+                    ),
+              SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    final meal = {
-                      'name': _name,
-                      'description': _description,
-                      'calories': _calories,
-                      'protein': _protein,
-                      'carbohydrates': _carbohydrates,
-                      'fats': _fats,
-                      'dateTime': _dateTime,
-                      'isInDiet': _isInDiet,
-                    };
+                    final meal = Meal(
+                      name: _name,
+                      description: _description,
+                      calories: _calories,
+                      protein: _protein,
+                      carbohydrates: _carbohydrates,
+                      fats: _fats,
+                      dateTime: _dateTime,
+                      isInDiet: _isInDiet,
+                      imagePath: _image?.path,
+                    );
                     if (widget.onMealAdded != null) {
                       widget.onMealAdded!(meal);
                     }
