@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
 import 'meal_tracking_create.dart';
 import 'meal_tracking_detail.dart';
 import '../../models/meal.dart';
-
 import 'dart:io';
+
 class MealsTrackingScreen extends StatefulWidget {
   @override
   _MealsTrackingScreenState createState() => _MealsTrackingScreenState();
@@ -40,7 +39,16 @@ class _MealsTrackingScreenState extends State<MealsTrackingScreen> {
     );
   }
 
-  void _deleteMeal(int index) {
+  void _deleteMeal(int index) async {
+    await _mealsBox.deleteAt(index);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Refeição excluída com sucesso!'),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context, int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -50,16 +58,15 @@ class _MealsTrackingScreenState extends State<MealsTrackingScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Fecha o diálogo
               },
               child: Text('Cancelar'),
             ),
             TextButton(
               onPressed: () {
-                setState(() {
-                  _mealsBox.deleteAt(index);
-                });
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Fecha o diálogo
+                _deleteMeal(index); // Chama a função de deleção
+                Navigator.of(context).pop(); // Fecha o diálogo
               },
               child: Text('Excluir'),
             ),
@@ -133,6 +140,9 @@ class _MealsTrackingScreenState extends State<MealsTrackingScreen> {
                       MaterialPageRoute(
                         builder: (context) => MealDetailScreen(
                           meal: meal,
+                          onDelete: () {
+                            _showDeleteConfirmationDialog(context, index);
+                          },
                         ),
                       ),
                     );
@@ -147,6 +157,7 @@ class _MealsTrackingScreenState extends State<MealsTrackingScreen> {
         onPressed: _addNewMeal,
         child: Icon(Icons.add),
         tooltip: 'Adicionar Refeição',
+        backgroundColor: Colors.blue,
       ),
     );
   }

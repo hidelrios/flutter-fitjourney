@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import '../../models/meal.dart';
 import 'dart:io';
 
 class MealDetailScreen extends StatelessWidget {
   final Meal meal;
+  final VoidCallback onDelete;
 
-  MealDetailScreen({required this.meal});
+  MealDetailScreen({required this.meal, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +14,14 @@ class MealDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Detalhes da Refeição'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              onDelete();
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -135,4 +143,6 @@ class MealDetailScreen extends StatelessWidget {
       ),
     );
   }
+
+  
 }
