@@ -1,4 +1,5 @@
 import 'package:fitjourney/src/screens/exercises/exercises_create.dart';
+import 'package:fitjourney/src/screens/exercises/exercises_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -86,13 +87,35 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                     ),
                     child: ListTile(
                       contentPadding: EdgeInsets.all(16),
-                      title: Text(exercise.name),
-                      subtitle: Text(
-                        'Séries: ${exercise.numberOfSets}, Repetições: ${exercise.numberOfReps}, Tempo: ${exercise.restTime}s',
+                      title: Text(
+                        exercise.name,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      isThreeLine: false,
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 8),
+                          Text('Séries: ${exercise.numberOfSets}'),
+                          Text('Repetições: ${exercise.numberOfReps}'),
+                          Text('Tempo de descanso: ${exercise.restTime}s'),
+                          SizedBox(height: 8),
+                          Text(
+                            'Categoria: ${exercise.category}',
+                            style: TextStyle(color: Colors.blueAccent),
+                          ),
+                        ],
+                      ),
+                      trailing: Icon(Icons.chevron_right, color: Colors.grey),
                       onTap: () {
-                        // Ação ao tocar no item, se necessário
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ExerciseDetailScreen(exercise: exercise),
+                          ),
+                        );
                       },
                     ),
                   );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/exercises/exercises.dart';
+import 'screens/exercises/exercises_home.dart';
 import 'screens/home/home.dart';
 import 'screens/meals/meal_tracking_home.dart';
 import 'screens/workoutplans/workoutplans.dart';
