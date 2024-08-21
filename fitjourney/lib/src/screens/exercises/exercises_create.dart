@@ -132,6 +132,7 @@ class _ExerciseRegistrationScreenState extends State<ExerciseRegistrationScreen>
               ElevatedButton(
                 onPressed: _saveExercise,
                 child: Text('Cadastrar Exercício'),
+                
               ),
             ],
           ),

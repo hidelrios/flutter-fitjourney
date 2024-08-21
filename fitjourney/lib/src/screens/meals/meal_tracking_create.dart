@@ -42,80 +42,40 @@ class _MealRegistrationScreenState extends State<MealRegistrationScreen> {
         title: Text('Registrar Refeição'),
         centerTitle: true,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: ListView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Nome'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o nome da refeição';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _name = value!,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Descrição'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira uma descrição';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _description = value!,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Calorias'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o número de calorias';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _calories = int.parse(value!),
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Proteínas (g)'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira a quantidade de proteínas';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _protein = double.parse(value!),
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Carboidratos (g)'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira a quantidade de carboidratos';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _carbohydrates = double.parse(value!),
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Gorduras (g)'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira a quantidade de gorduras';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _fats = double.parse(value!),
-              ),
+              _buildSectionTitle('Informações Básicas'),
+              _buildTextField('Nome', 'Insira o nome da refeição', (value) {
+                _name = value!;
+              }),
+              _buildTextField('Descrição', 'Insira uma descrição', (value) {
+                _description = value!;
+              }),
               SizedBox(height: 16),
+              _buildSectionTitle('Nutrientes'),
+              _buildNutrientField('Calorias', (value) {
+                _calories = int.parse(value!);
+              }),
+              _buildNutrientField('Proteínas (g)', (value) {
+                _protein = double.parse(value!);
+              }),
+              _buildNutrientField('Carboidratos (g)', (value) {
+                _carbohydrates = double.parse(value!);
+              }),
+              _buildNutrientField('Gorduras (g)', (value) {
+                _fats = double.parse(value!);
+              }),
+              SizedBox(height: 16),
+              _buildSectionTitle('Detalhes da Refeição'),
               ListTile(
-                title: Text('Data e Hora da Refeição'),
-                subtitle: Text('${_dateTime.toLocal()}'.split(' ')[0] + ' ${_dateTime.hour}:${_dateTime.minute}'),
+                title: Text('Data e Hora'),
+                subtitle: Text('${_dateTime.toLocal()}'.split(' ')[0] +
+                    ' ${_dateTime.hour}:${_dateTime.minute}'),
                 trailing: Icon(Icons.calendar_today),
                 onTap: () async {
                   DateTime? selectedDate = await showDatePicker(
@@ -143,7 +103,6 @@ class _MealRegistrationScreenState extends State<MealRegistrationScreen> {
                   }
                 },
               ),
-              SizedBox(height: 16),
               SwitchListTile(
                 title: Text('Está dentro da dieta?'),
                 value: _isInDiet,
@@ -154,11 +113,12 @@ class _MealRegistrationScreenState extends State<MealRegistrationScreen> {
                 },
               ),
               SizedBox(height: 16),
+              _buildSectionTitle('Imagem da Refeição'),
               _image == null
                   ? ElevatedButton.icon(
                       onPressed: _pickImage,
                       icon: Icon(Icons.photo),
-                      label: Text('Adicionar Imagem da Refeição'),
+                      label: Text('Adicionar Imagem'),
                     )
                   : Column(
                       children: [
@@ -168,6 +128,7 @@ class _MealRegistrationScreenState extends State<MealRegistrationScreen> {
                           width: double.infinity,
                           fit: BoxFit.cover,
                         ),
+                        SizedBox(height: 8),
                         ElevatedButton.icon(
                           onPressed: _pickImage,
                           icon: Icon(Icons.photo),
@@ -175,34 +136,87 @@ class _MealRegistrationScreenState extends State<MealRegistrationScreen> {
                         ),
                       ],
                     ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    final meal = Meal(
-                      name: _name,
-                      description: _description,
-                      calories: _calories,
-                      protein: _protein,
-                      carbohydrates: _carbohydrates,
-                      fats: _fats,
-                      dateTime: _dateTime,
-                      isInDiet: _isInDiet,
-                      imagePath: _image?.path,
-                    );
-                    if (widget.onMealAdded != null) {
-                      widget.onMealAdded!(meal);
+              SizedBox(height: 24),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      final meal = Meal(
+                        name: _name,
+                        description: _description,
+                        calories: _calories,
+                        protein: _protein,
+                        carbohydrates: _carbohydrates,
+                        fats: _fats,
+                        dateTime: _dateTime,
+                        isInDiet: _isInDiet,
+                        imagePath: _image?.path,
+                      );
+                      if (widget.onMealAdded != null) {
+                        widget.onMealAdded!(meal);
+                      }
+                      Navigator.of(context).pop();
                     }
-                    Navigator.of(context).pop();
-                  }
-                },
-                child: Text('Registrar Refeição'),
+                  },
+                  child: Text('Registrar Refeição'),
+                ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+    String label,
+    String hint,
+    Function(String?) onSaved,
+  ) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        border: OutlineInputBorder(),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Por favor, $hint';
+        }
+        return null;
+      },
+      onSaved: onSaved,
+    );
+  }
+
+  Widget _buildNutrientField(String label, Function(String?) onSaved) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: TextInputType.number,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Por favor, insira o valor de $label';
+        }
+        return null;
+      },
+      onSaved: onSaved,
     );
   }
 }

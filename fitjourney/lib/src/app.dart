@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/exercises/exercises_home.dart';
 import 'screens/home/home.dart';
 import 'screens/meals/meal_tracking_home.dart';
-import 'screens/workoutplans/workoutplans.dart';
+import 'screens/training/training_home.dart';
 
 class App extends StatefulWidget {
   @override
@@ -14,7 +14,7 @@ class _AppState extends State<App> {
 
   final List<Widget> _screens = [
     HomeScreen(), // Tela inicial
-    WorkoutPlansScreen(),
+    TrainingScreen(),
     ExercisesScreen(),
     MealsTrackingScreen(),
   ];

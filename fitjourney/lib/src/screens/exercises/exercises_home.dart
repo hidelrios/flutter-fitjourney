@@ -129,6 +129,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         onPressed: _addNewExercise,
         child: Icon(Icons.add),
         tooltip: 'Adicionar Exercício',
+                backgroundColor: Colors.blue,
+
       ),
     );
   }

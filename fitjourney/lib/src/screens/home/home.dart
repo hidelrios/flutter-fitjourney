@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../../models/exercise.dart';
 import '../meals/meals_statistics.dart';
+import '../training/training_statistics.dart';
 import '../../models/meal.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Box<Meal> _mealsBox;
-  late  Box<Exercise> _exercisesBox;
+  late Box<Exercise> _exercisesBox;
 
   @override
   void initState() {
@@ -98,6 +99,45 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontSize: 48,
                               fontWeight: FontWeight.bold,
                             ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => TrainingStatistics(),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    color: Colors.greenAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 8,
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Estatísticas dos Treinos',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          Icon(
+                            Icons.bar_chart,
+                            size: 48,
+                            color: Colors.white,
                           ),
                         ],
                       ),
